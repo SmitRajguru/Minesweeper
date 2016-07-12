@@ -12,7 +12,7 @@ class cell
 {
     public:
         bool is_bomb,is_flagged,is_hidden;
-        char mark;
+        int mark;
         cell()
         {
             this->is_flagged=false;
@@ -29,24 +29,32 @@ class boards
 
         void set_board(int i)
         {
-            cout<<"1";
+
             this->n=i;
            //board = new cell*[n];
-            *board = (cell *)malloc(8*sizeof(cell *));
-            cout<<"3";
+            board = (cell **)malloc(n*sizeof(cell *));
+
             for(int j=0;j<n;j++)
-                board[j] = new cell[8];
+            {
+                board[j] = (cell *)malloc(n*sizeof(cell ));
+                for(int i = 0; i < n; i++)
+                {
+                    board[j][i].is_hidden = true;
+                    board[j][i].is_bomb = false;
+                    board[j][i].mark=0;
+                }
+            }
         }
 
         void generate_bombs(int bombs)
         {
-            if(bombs = 0)
+            if(bombs == 0)
                 return;
-            int i = generate_Random(0,n);
-            int j = generate_Random(0,n);
+            int i = generate_Random(0,n-1);
+            int j = generate_Random(0,n-1);
             if(!board[i][j].is_bomb)
             {
-                board[i][j].is_bomb-true;
+                board[i][j].is_bomb=true;
                 generate_bombs(bombs-1);
             }
             else
@@ -88,7 +96,16 @@ class boards
 
         void disp_board()
         {
-            string output = "";
+            /*for(int i = 0;i < n; i++){
+                for(int j = 0; j < n; j++ ){
+                    cout<<board[i][j].is_hidden<<" ";
+                    cout<<board[i][j].is_bomb<<" ";
+                    cout<<board[i][j].is_flagged<<"\t";
+                }
+                cout<<endl;
+            }*/
+
+            string output = "        ";
             for (int i=0;i<n;i++)
             {
                 for (int j=0;j<n;j++)
@@ -177,7 +194,7 @@ class boards
 
         void  toggle_flag()
         {
-            cout<<"    Enter Co-ordinates to Flag/Unflag...\n    ";
+            cout<<"    Enter Co-ordinates to Flag/Unflag...\n";
             cout<<"    Enter Row Co-ordinate: ";
             int i;
             cin>>i;
